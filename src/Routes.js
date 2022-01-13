@@ -5,9 +5,9 @@ import Login from './components/Login';
 export default class App extends Component {
   render() {
     return (
-        <Switch>
-          <Route exact path="/" component={ Login } />
-        </Switch>
+      <Switch>
+        <Route exact path="/" component={ Login } />
+      </Switch>
     );
   }
 }
