@@ -43,7 +43,7 @@ class Login extends React.Component {
     const { name } = this.state;
 
     saveName(name);
-    history.push('/jogo');
+    history.push('/jogoo');
   }
 
   render() {
@@ -81,7 +81,7 @@ class Login extends React.Component {
           </div>
           <button
             type="submit"
-            data-test-id="btn-play"
+            data-testid="btn-play"
             disabled={ disabled }
             onClick={ this.handleClick }
           >
