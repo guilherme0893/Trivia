@@ -1,6 +1,3 @@
-// import { combineReducers } from 'redux';
-// import user from './user';
-// import tokenReducer from './token';
 import {
   REQUEST_API,
   REQUEST_API_SUCCESS,
@@ -12,7 +9,7 @@ const INITIAL_STATE = {
   error: '',
 };
 
-const reducer = (state = INITIAL_STATE, action) => {
+const tokenReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case REQUEST_API:
     return {
@@ -33,6 +30,4 @@ const reducer = (state = INITIAL_STATE, action) => {
   }
 };
 
-// const rootReducer = combineReducers({ user, tokenReducer });
-
-export default reducer;
+export default tokenReducer;

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { actionUser } from '../actions';
+// import store from '../store/index';
+import { actionUser, requestApiThunk } from '../actions';
 
 class Login extends React.Component {
   constructor() {
@@ -38,12 +39,17 @@ class Login extends React.Component {
   validateEmail = (email) => String(email).toLowerCase()
     .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
-  handleClick = () => {
-    const { saveName, history } = this.props;
-    const { name } = this.state;
+  handleClick = (event) => {
+    event.preventDefault();
+    const { history, fetchApi } = this.props;
+    // const { name } = this.state;
 
-    saveName(name);
-    history.push('/jogoo');
+    fetchApi();
+
+    // localStorage.setItem('token', JSON.stringify(store.getState(tokenProps)));
+
+    // saveName(name);
+    history.push('/main');
   }
 
   render() {
@@ -93,15 +99,22 @@ class Login extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  token: state.token,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   saveName: (nome) => dispatch(actionUser(nome)),
+  fetchApi: () => dispatch(requestApiThunk()),
 });
 
 Login.propTypes = {
-  saveName: PropTypes.func.isRequired,
+  // saveName: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  fetchApi: PropTypes.func.isRequired,
+  // tokenProps: PropTypes.string.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
