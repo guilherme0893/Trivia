@@ -43,7 +43,7 @@ class Login extends React.Component {
     const { name } = this.state;
 
     saveName(name);
-    history.push('/jogo');
+    history.push('/jogoo');
   }
 
   render() {
