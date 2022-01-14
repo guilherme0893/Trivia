@@ -39,17 +39,15 @@ class Login extends React.Component {
   validateEmail = (email) => String(email).toLowerCase()
     .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
-  handleClick = (event) => {
-    event.preventDefault();
-    const { history, fetchApi } = this.props;
-    // const { name } = this.state;
+  handleClick = ({ target: { value } }) => {
+    const { fetchApi, history } = this.props;
 
-    fetchApi();
-
-    // localStorage.setItem('token', JSON.stringify(store.getState(tokenProps)));
-
-    // saveName(name);
-    history.push('/main');
+    if (value === 'play') {
+      history.push('/main');
+      fetchApi();
+    } else {
+      history.push('/settings');
+    }
   }
 
   render() {
@@ -89,9 +87,18 @@ class Login extends React.Component {
             type="submit"
             data-testid="btn-play"
             disabled={ disabled }
+            value="play"
             onClick={ this.handleClick }
           >
             Play
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            value="settings"
+            onClick={ this.handleClick }
+          >
+            Settings
           </button>
         </form>
       </div>
