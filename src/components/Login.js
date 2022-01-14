@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // import store from '../store/index';
-import { actionUser, requestApiThunk } from '../actions';
+import { actionName, requestApiThunk, actionEmail } from '../actions';
 
 class Login extends React.Component {
   constructor() {
@@ -40,7 +40,8 @@ class Login extends React.Component {
     .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
   handleClick = ({ target: { value } }) => {
-    const { fetchApi, history } = this.props;
+    const { email, name } = this.state;
+    const { fetchApi, history, saveName, saveEmail } = this.props;
 
     if (value === 'play') {
       history.push('/main');
@@ -48,6 +49,9 @@ class Login extends React.Component {
     } else {
       history.push('/settings');
     }
+
+    saveName(name);
+    saveEmail(email);
   }
 
   render() {
@@ -108,15 +112,19 @@ class Login extends React.Component {
 
 const mapStateToProps = (state) => ({
   token: state.token,
+  name: state.user.name,
+  email: state.user.email,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveName: (nome) => dispatch(actionUser(nome)),
+  saveName: (name) => dispatch(actionName(name)),
+  saveEmail: (email) => dispatch(actionEmail(email)),
   fetchApi: () => dispatch(requestApiThunk()),
 });
 
 Login.propTypes = {
-  // saveName: PropTypes.func.isRequired,
+  saveName: PropTypes.func.isRequired,
+  saveEmail: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,

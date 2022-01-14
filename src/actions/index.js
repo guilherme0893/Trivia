@@ -1,13 +1,19 @@
 import requestAPI from '../services/triviaAPI';
 
-export const ACTION_USER = 'ACTION_USER';
+export const ACTION_NAME = 'ACTION_NAME';
+export const ACTION_EMAIL = 'ACTION_EMAIL';
 export const REQUEST_API = 'REQUEST_API';
 export const REQUEST_API_SUCCESS = 'REQUEST_API_SUCCESS';
 export const REQUEST_API_FAIL = 'REQUEST_API_FAIL';
 
-export const actionUser = (nome) => ({
-  type: ACTION_USER,
-  nome,
+export const actionName = (name) => ({
+  type: ACTION_NAME,
+  name,
+});
+
+export const actionEmail = (email) => ({
+  type: ACTION_EMAIL,
+  email,
 });
 
 export const actionRequestApi = () => ({
