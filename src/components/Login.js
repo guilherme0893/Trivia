@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import store from '../store/index';
-import { actionName, requestApiThunk, actionEmail } from '../actions';
+import { userEmailInfos, requestTokenThunk } from '../actions';
 
 class Login extends React.Component {
   constructor() {
@@ -40,18 +39,18 @@ class Login extends React.Component {
     .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
   handleClick = ({ target: { value } }) => {
-    const { email, name } = this.state;
-    const { fetchApi, history, saveName, saveEmail } = this.props;
-
+    const { state: { email, name } } = this;
+    const { fetchToken, history, getUserInfos } = this.props;
+    // console.log(tokens);
+    fetchToken();
     if (value === 'play') {
       history.push('/main');
-      fetchApi();
     } else {
       history.push('/settings');
     }
-
-    saveName(name);
-    saveEmail(email);
+    getUserInfos({ name, email });
+    // saveName(name);
+    // saveEmail(email);
   }
 
   render() {
@@ -97,7 +96,7 @@ class Login extends React.Component {
             Play
           </button>
           <button
-            type="button"
+            type="submit"
             data-testid="btn-settings"
             value="settings"
             onClick={ this.handleClick }
@@ -111,25 +110,27 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  token: state.token,
-  name: state.user.name,
-  email: state.user.email,
+  tokens: state.token,
+  // name: state.user.name,
+  // email: state.user.email,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveName: (name) => dispatch(actionName(name)),
-  saveEmail: (email) => dispatch(actionEmail(email)),
-  fetchApi: () => dispatch(requestApiThunk()),
+  // saveName: (name) => dispatch(actionName(name)),
+  // saveEmail: (email) => dispatch(actionEmail(email)),
+  getUserInfos: ({ name, email }) => dispatch(userEmailInfos({ name, email })),
+  fetchToken: () => dispatch(requestTokenThunk()),
 });
 
 Login.propTypes = {
-  saveName: PropTypes.func.isRequired,
-  saveEmail: PropTypes.func.isRequired,
+  // saveName: PropTypes.func.isRequired,
+  // saveEmail: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  fetchApi: PropTypes.func.isRequired,
-  // tokenProps: PropTypes.string.isRequired,
+  fetchToken: PropTypes.func.isRequired,
+  getUserInfos: PropTypes.func.isRequired,
+  // tokens: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
