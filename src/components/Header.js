@@ -4,15 +4,26 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 class Header extends React.Component {
+  // constructor(props) {
+  //   super(props);
+
+  //   this.state = {
+  //     imgSRC: '',
+  //   };
+  // }
+
   hashGravatar = () => {
     const { email } = this.props;
+    // console.log(email);
     const hash = md5(email).toString();
     const url = `https://www.gravatar.com/avatar/${hash}`;
     return url;
-  }
+    // this.setState({ imgSRC: url });
+  };
 
   render() {
     const { name, score } = this.props;
+    // const { imgSRC } = this.state;
     return (
       <div>
         <header>

@@ -1,27 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { userEmailInfos, requestTokenThunk } from '../actions';
+import { userInfoAction, requestTokenThunk } from '../actions';
 
 class Login extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      name: '',
-      email: '',
+      player: {
+        name: '',
+        email: '',
+      },
       disabled: true,
     };
   }
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value }, () => {
-      this.validateButton();
-    });
-  }
+  // https://stackoverflow.com/questions/46155/whats-the-best-way-to-validate-an-email-address-in-javascript
+  validateEmail = (email) => String(email).toLowerCase()
+    .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 
   validateButton = () => {
-    const { email, name } = this.state;
+    const { player: { email, name } } = this.state;
     const min = 2;
     if (this.validateEmail(email) && name.length >= min) {
       this.setState({
@@ -34,27 +34,32 @@ class Login extends React.Component {
     }
   }
 
-  // https://stackoverflow.com/questions/46155/whats-the-best-way-to-validate-an-email-address-in-javascript
-  validateEmail = (email) => String(email).toLowerCase()
-    .match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+  handleChange = ({ target }) => {
+    const { name, value } = target;
+    this.setState((prevState) => ({
+      player: {
+        ...prevState.player,
+        [name]: value,
+      },
+    }), () => {
+      this.validateButton();
+    });
+  };
 
   handleClick = ({ target: { value } }) => {
-    const { state: { email, name } } = this;
+    const { player } = this.state;
     const { fetchToken, history, getUserInfos } = this.props;
-    // console.log(tokens);
     fetchToken();
+    getUserInfos(player);
     if (value === 'play') {
       history.push('/main');
     } else {
       history.push('/settings');
     }
-    getUserInfos({ name, email });
-    // saveName(name);
-    // saveEmail(email);
   }
 
   render() {
-    const { name, email, disabled } = this.state;
+    const { player: { email, name }, disabled } = this.state;
 
     return (
       <div>
@@ -109,28 +114,21 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  tokens: state.token,
-  // name: state.user.name,
-  // email: state.user.email,
-});
+// const mapStateToProps = (state) => ({
+//   token: state.token,
+// });
 
 const mapDispatchToProps = (dispatch) => ({
-  // saveName: (name) => dispatch(actionName(name)),
-  // saveEmail: (email) => dispatch(actionEmail(email)),
-  getUserInfos: ({ name, email }) => dispatch(userEmailInfos({ name, email })),
+  getUserInfos: (player) => dispatch(userInfoAction(player)),
   fetchToken: () => dispatch(requestTokenThunk()),
 });
 
 Login.propTypes = {
-  // saveName: PropTypes.func.isRequired,
-  // saveEmail: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
   fetchToken: PropTypes.func.isRequired,
   getUserInfos: PropTypes.func.isRequired,
-  // tokens: PropTypes.string.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);

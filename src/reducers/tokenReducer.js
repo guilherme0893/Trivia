@@ -1,26 +1,17 @@
-import {
-  REQUEST_TOKEN_SUCCESS,
-  // REQUEST_API_FAIL,
-} from '../actions/index';
+import { REQUEST_TOKEN } from '../actions';
 
 const INITIAL_STATE = {
   token: '',
-  // error: '',
+  questions: [],
 };
 
 const tokenReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case REQUEST_TOKEN_SUCCESS:
-    // localStorage.setItem('token', JSON.stringify(action.token));
+  case REQUEST_TOKEN:
     return {
       ...state,
       token: action.token,
     };
-  // case REQUEST_API_FAIL:
-  //   return {
-  //     ...state,
-  //     error: 'Fetch API failed!',
-  //   };
   default:
     return state;
   }
