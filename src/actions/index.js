@@ -4,6 +4,7 @@ export const REQUEST_TOKEN = 'REQUEST_TOKEN';
 export const GET_INFOS = 'GET_INFOS';
 export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const GET_SCORE = 'GET_SCORE';
+export const FINISH_TIMER = 'FINISH_TIMER';
 
 export const userInfoAction = (player) => ({
   type: GET_INFOS,
@@ -23,6 +24,10 @@ const getQuestionsAction = (questions) => ({
 export const getScoreAction = (score) => ({
   type: GET_SCORE,
   score,
+});
+
+export const timerFinish = () => ({
+  type: FINISH_TIMER,
 });
 
 const url = 'https://opentdb.com/api_token.php?command=request';

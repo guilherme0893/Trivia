@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { requestQuestionsThunk } from '../actions/index';
+import Timer from './Timer';
 
 class GameBody extends Component {
   // constructor(props) {
@@ -37,6 +38,7 @@ class GameBody extends Component {
 
     return (
       <div>
+        <Timer />
         <div>
           <p data-testid="question-category">{0}</p>
           <p data-testid="question-text">{0}</p>

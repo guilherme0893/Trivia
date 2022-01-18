@@ -2,6 +2,7 @@ import {
   GET_INFOS,
   REQUEST_TOKEN,
   GET_QUESTIONS,
+  FINISH_TIMER,
   // GET_SCORE,
 } from '../actions';
 
@@ -13,6 +14,7 @@ const INITIAL_STATE = {
   },
   token: '',
   questions: [],
+  timerFinish: false,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -36,6 +38,11 @@ const reducer = (state = INITIAL_STATE, action) => {
         ...state.player,
         ...action.player,
       },
+    };
+  case FINISH_TIMER:
+    return {
+      ...state,
+      timerFinish: true,
     };
   // case GET_SCORE:
   //   return {
