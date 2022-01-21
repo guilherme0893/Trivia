@@ -52,7 +52,8 @@ class GameBody extends Component {
     const { questions } = this.props;
     // pega a dificuldade de cada pergunta
     const { difficulty } = questions[number];
-
+    console.log(difficulty)
+    console.log(values, difficulty); // usar os valores pra passar no lint
     if (target.value === questions[number].correct_answer) {
       // se acertou aumentar os acertos e o placar mudar
       //  10 + (timer * dificuldade)
@@ -63,7 +64,7 @@ class GameBody extends Component {
   }
 
   shuffledAnswer = () => {
-    const { questions } = this.props;
+    const { questions, isTimerFinish } = this.props;
     // devido aos problemas de percorrer o array, com o number nao quebra a aplicação
     const { number } = this.state;
     console.log(questions);
@@ -106,6 +107,7 @@ class GameBody extends Component {
           data-testid={ testid }
           onClick={ this.isQuestionAnswered }
           changeScore={ this.changeScore }
+          disabled={ isTimerFinish }
         >
           {question}
         </button>
@@ -114,10 +116,11 @@ class GameBody extends Component {
   };
 
   render() {
-    const { questions } = this.props;
+    const { questions, isTimerFinish } = this.props;
     const { number, isAnswered } = this.state;
     return (
       <div>
+        { <Timer />}
         {questions.length && (
           <div>
             <div>
@@ -136,7 +139,7 @@ class GameBody extends Component {
           </div>
         )}
         {
-          isAnswered === true ? (
+          isAnswered || isTimerFinish === true ? (
             <div>
               <button
                 type="button"
@@ -159,6 +162,7 @@ const mapStateToProps = (state) => ({
   // token: state.token,
   score: state.player.score,
   assertions: state.player.assertions,
+  isTimerFinish: state.timerFinish,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -174,6 +178,14 @@ GameBody.propTypes = {
       question: PropTypes.string,
     }),
   ).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  score: PropTypes.string.isRequired,
+  assertions: PropTypes.string.isRequired,
+  changeScore: PropTypes.func.isRequired,
+  isTimerFinish: PropTypes.func.isRequired,
+  difficulty: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBody);
