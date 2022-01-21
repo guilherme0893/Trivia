@@ -3,13 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 class GameBody extends Component {
-  // constructor() {
-  //   super();
-
-  //   // this.state = {
-  //   //   number: 0,
-  //   // };
-  // }
 
   shuffledAnswer = () => {
     const { questions } = this.props;
