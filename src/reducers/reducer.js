@@ -25,9 +25,7 @@ const reducer = (state = INITIAL_STATE, action) => {
   case GET_QUESTIONS:
     return {
       ...state,
-      questions: [
-        action.questions,
-      ],
+      questions: action.questions,
     };
   case GET_INFOS:
     return {
