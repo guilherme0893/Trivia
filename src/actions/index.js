@@ -20,9 +20,10 @@ const getQuestionsAction = (questions) => ({
   questions,
 });
 
-export const getScoreAction = (score) => ({
+export const getScoreAction = (score, assertions) => ({
   type: GET_SCORE,
   score,
+  assertions,
 });
 
 const url = 'https://opentdb.com/api_token.php?command=request';

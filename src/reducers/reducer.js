@@ -2,7 +2,7 @@ import {
   GET_INFOS,
   REQUEST_TOKEN,
   GET_QUESTIONS,
-  // GET_SCORE,
+  GET_SCORE,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -10,6 +10,7 @@ const INITIAL_STATE = {
     name: '',
     email: '',
     score: 0,
+    assertions: 0,
   },
   token: '',
   questions: [],
@@ -35,14 +36,15 @@ const reducer = (state = INITIAL_STATE, action) => {
         ...action.player,
       },
     };
-  // case GET_SCORE:
-  //   return {
-  //     ...state,
-  //     player: {
-  //       ...state.player,
-  //       score: action.score,
-  //     },
-  //   };
+  case GET_SCORE:
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        score: action.score,
+        assertions: action.assertions,
+      },
+    };
   default:
     return state;
   }
