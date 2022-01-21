@@ -1,45 +1,53 @@
-import requestAPI from '../services/triviaAPI';
+import { fetchToken, fetchQuestions } from '../services/triviaAPI';
 
-// export const ACTION_NAME = 'ACTION_NAME';
-// export const ACTION_EMAIL = 'ACTION_EMAIL';
-export const REQUEST_TOKEN_SUCCESS = 'REQUEST_TOKEN_SUCCESS';
-export const REQUEST_TOKEN_FAIL = 'REQUEST_TOKEN_FAIL';
+export const REQUEST_TOKEN = 'REQUEST_TOKEN';
 export const GET_INFOS = 'GET_INFOS';
+export const GET_QUESTIONS = 'GET_QUESTIONS';
+export const GET_SCORE = 'GET_SCORE';
 
-// export const actionName = (name) => ({
-//   type: ACTION_NAME,
-//   name,
-// });
-
-// export const actionEmail = (email) => ({
-//   type: ACTION_EMAIL,
-//   email,
-// });
-
-export const userEmailInfos = (userEmailInfo) => ({
+export const userInfoAction = (player) => ({
   type: GET_INFOS,
-  userEmailInfo,
+  player,
 });
 
-const actionRequestTokenSuccess = (token) => ({
-  type: REQUEST_TOKEN_SUCCESS,
+const requestTokenAction = (token) => ({
+  type: REQUEST_TOKEN,
   token,
 });
 
-export const actionRequestTokenFail = (error) => ({
-  type: REQUEST_TOKEN_FAIL,
-  error: console.error(error),
+const getQuestionsAction = (questions) => ({
+  type: GET_QUESTIONS,
+  questions,
 });
 
-export const requestTokenThunk = () => (dispatch) => {
-  requestAPI()
-    .then((data) => {
-      // console.log(data);
-      // o problema estava aqui: data é um objeto, e token é ele desestruturado!
-      const { token } = data;
-      // console.log(token);
-      localStorage.setItem('token', JSON.stringify(token));
-      return dispatch(actionRequestTokenSuccess(token));
-    })
-    .catch((error) => console.error(error));
+export const getScoreAction = (score) => ({
+  type: GET_SCORE,
+  score,
+});
+
+const url = 'https://opentdb.com/api_token.php?command=request';
+
+export const requestQuestionsThunk = (token) => async (dispatch) => {
+  const codeControl = 3;
+  const data = await fetchQuestions(token);
+  if (data.response_code === codeControl) {
+    // se for igual a 3 => expirou e faz uma nova requisição
+    const newRequest = await fetchToken(url);
+    // pega o token da nova requisição => avaliar se desestrutura também
+    const newData = await fetchQuestions(newRequest.token);
+    // dispara o getQuestions com as novas perguntas
+    dispatch(getQuestionsAction(newData.results));
+  } else {
+    // dispara o getQuestions com as perguntas originais, do token nao expirado
+    dispatch(getQuestionsAction(data.results));
+  }
+};
+
+export const requestTokenThunk = () => async (dispatch) => {
+  const data = await fetchToken(url);
+  // o problema estava aqui: data é um objeto, e token é ele desestruturado!
+  // const { token } = data;
+  localStorage.setItem('token', data.token);
+  dispatch(requestTokenAction(data.token));
+  dispatch(requestQuestionsThunk(data.token));
 };
