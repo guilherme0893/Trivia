@@ -21,9 +21,10 @@ const getQuestionsAction = (questions) => ({
   questions,
 });
 
-export const getScoreAction = (score) => ({
+export const getScoreAction = (score, assertions) => ({
   type: GET_SCORE,
   score,
+  assertions,
 });
 
 export const timerFinish = () => ({

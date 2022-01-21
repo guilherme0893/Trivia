@@ -3,7 +3,7 @@ import {
   REQUEST_TOKEN,
   GET_QUESTIONS,
   FINISH_TIMER,
-  // GET_SCORE,
+  GET_SCORE,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -11,6 +11,7 @@ const INITIAL_STATE = {
     name: '',
     email: '',
     score: 0,
+    assertions: 0,
   },
   token: '',
   questions: [],
@@ -27,9 +28,7 @@ const reducer = (state = INITIAL_STATE, action) => {
   case GET_QUESTIONS:
     return {
       ...state,
-      questions: [
-        action.questions,
-      ],
+      questions: action.questions,
     };
   case GET_INFOS:
     return {
@@ -44,14 +43,15 @@ const reducer = (state = INITIAL_STATE, action) => {
       ...state,
       timerFinish: true,
     };
-  // case GET_SCORE:
-  //   return {
-  //     ...state,
-  //     player: {
-  //       ...state.player,
-  //       score: action.score,
-  //     },
-  //   };
+  case GET_SCORE:
+    return {
+      ...state,
+      player: {
+        ...state.player,
+        score: action.score,
+        assertions: action.assertions,
+      },
+    };
   default:
     return state;
   }
