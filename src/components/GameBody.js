@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Timer from './Timer';
 import { Redirect } from 'react-router-dom';
 import { getScoreAction } from '../actions/index';
+import Timer from './Timer';
 
 class GameBody extends Component {
   constructor() {
