@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Timer from './Timer';
+import { Redirect } from 'react-router-dom';
 import { getScoreAction } from '../actions/index';
 
 class GameBody extends Component {
@@ -11,6 +12,7 @@ class GameBody extends Component {
     this.state = {
       isAnswered: false,
       number: 0,
+      gameFinished: false,
     };
   }
 
@@ -24,44 +26,46 @@ class GameBody extends Component {
   }
 
   goToNextQuestion = () => {
-    // quando chega na ultima questao ele quebra pq acabou
     const lastQuestion = 4;
-    const { history } = this.props;
+    // const { history } = this.props;
     const { number } = this.state;
 
     if (number === lastQuestion) {
-      history.push('/feedback');
+      this.setState({
+        gameFinished: true,
+      });
+      // history.push('/feedback');
     } else {
       this.setState({
         isAnswered: false,
         number: number + 1,
+        gameFinished: false,
       }, () => this.shuffledAnswer());
     }
   }
 
-  changeScore = ({ target }) => {
-    // peso de cada dificuldade para o score mudar
-    const values = {
-      easy: 1,
-      medium: 2,
-      hard: 3,
-    };
-    const dez = 10;
-    const { number } = this.state;
-    const { score, assertions, changeScore } = this.props;
-    const { questions } = this.props;
-    // pega a dificuldade de cada pergunta
-    const { difficulty } = questions[number];
-    console.log(difficulty)
-    console.log(values, difficulty); // usar os valores pra passar no lint
-    if (target.value === questions[number].correct_answer) {
-      // se acertou aumentar os acertos e o placar mudar
-      //  10 + (timer * dificuldade)
-      // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
-      changeScore((assertions + 1), (score + dez));
-    }
-    localStorage.setItem('score', JSON.stringify(score));
-  }
+  // changeScore = ({ target }) => {
+  //   // peso de cada dificuldade para o score mudar
+  //   const values = {
+  //     easy: 1,
+  //     medium: 2,
+  //     hard: 3,
+  //   };
+  //   const dez = 10;
+  //   const { number } = this.state;
+  //   const { score, assertions, changeScore } = this.props;
+  //   const { questions } = this.props;
+  //   // pega a dificuldade de cada pergunta
+  //   const { difficulty } = questions[number];
+
+  //   if (target.value === questions[number].correct_answer) {
+  //     // se acertou aumentar os acertos e o placar mudar
+  //     //  10 + (timer * dificuldade)
+  //     // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
+  //     changeScore((assertions + 1), (score + dez));
+  //   }
+  //   localStorage.setItem('score', JSON.stringify(score));
+  // }
 
   shuffledAnswer = () => {
     const { questions, isTimerFinish } = this.props;
@@ -117,7 +121,7 @@ class GameBody extends Component {
 
   render() {
     const { questions, isTimerFinish } = this.props;
-    const { number, isAnswered } = this.state;
+    const { number, isAnswered, gameFinished } = this.state;
     return (
       <div>
         { <Timer />}
@@ -151,6 +155,11 @@ class GameBody extends Component {
             </div>
           ) : null
         }
+        {
+          gameFinished === true ? (
+            <Redirect to="/feedback" />
+          ) : null
+        }
       </div>
     );
   }
@@ -181,11 +190,7 @@ GameBody.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  score: PropTypes.string.isRequired,
-  assertions: PropTypes.string.isRequired,
-  changeScore: PropTypes.func.isRequired,
   isTimerFinish: PropTypes.func.isRequired,
-  difficulty: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBody);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+// vai aparecer na tela do ranking
 class BackToLoginButton extends Component {
   render() {
     return (
@@ -8,7 +9,7 @@ class BackToLoginButton extends Component {
           type="button"
           data-testid="btn-play-again"
         >
-          Voltar ao login
+          Jogar novamente
         </button>
       </div>
     );
