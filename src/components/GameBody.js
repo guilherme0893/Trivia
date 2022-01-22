@@ -25,7 +25,6 @@ class GameBody extends Component {
   }
 
   goToNextQuestion = () => {
-    // quando chega na ultima questao ele quebra pq acabou
     const lastQuestion = 4;
     // const { history } = this.props;
     const { number } = this.state;
