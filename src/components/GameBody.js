@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { getScoreAction } from '../actions/index';
+import Timer from './Timer';
 
 class GameBody extends Component {
   constructor() {
@@ -67,7 +68,7 @@ class GameBody extends Component {
   // }
 
   shuffledAnswer = () => {
-    const { questions } = this.props;
+    const { questions, isTimerFinish } = this.props;
     // devido aos problemas de percorrer o array, com o number nao quebra a aplicação
     const { number } = this.state;
     console.log(questions);
@@ -110,6 +111,7 @@ class GameBody extends Component {
           data-testid={ testid }
           onClick={ this.isQuestionAnswered }
           changeScore={ this.changeScore }
+          disabled={ isTimerFinish }
         >
           {question}
         </button>
@@ -118,10 +120,11 @@ class GameBody extends Component {
   };
 
   render() {
-    const { questions } = this.props;
+    const { questions, isTimerFinish } = this.props;
     const { number, isAnswered, gameFinished } = this.state;
     return (
       <div>
+        { <Timer />}
         {questions.length && (
           <div>
             <div>
@@ -140,7 +143,7 @@ class GameBody extends Component {
           </div>
         )}
         {
-          isAnswered === true ? (
+          isAnswered || isTimerFinish === true ? (
             <div>
               <button
                 type="button"
@@ -168,6 +171,7 @@ const mapStateToProps = (state) => ({
   // token: state.token,
   score: state.player.score,
   assertions: state.player.assertions,
+  isTimerFinish: state.timerFinish,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -186,6 +190,7 @@ GameBody.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  isTimerFinish: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBody);
