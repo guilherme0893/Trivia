@@ -44,28 +44,28 @@ class GameBody extends Component {
     }
   }
 
-  changeScore = ({ target }) => {
-    // peso de cada dificuldade para o score mudar
-    const values = {
-      easy: 1,
-      medium: 2,
-      hard: 3,
-    };
-    const dez = 10;
-    const { number } = this.state;
-    const { score, assertions, changeScore } = this.props;
-    const { questions } = this.props;
-    // pega a dificuldade de cada pergunta
-    const { difficulty } = questions[number];
+  // changeScore = ({ target }) => {
+  //   // peso de cada dificuldade para o score mudar
+  //   const values = {
+  //     easy: 1,
+  //     medium: 2,
+  //     hard: 3,
+  //   };
+  //   const dez = 10;
+  //   const { number } = this.state;
+  //   const { score, assertions, changeScore } = this.props;
+  //   const { questions } = this.props;
+  //   // pega a dificuldade de cada pergunta
+  //   const { difficulty } = questions[number];
 
-    if (target.value === questions[number].correct_answer) {
-      // se acertou aumentar os acertos e o placar mudar
-      //  10 + (timer * dificuldade)
-      // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
-      changeScore((assertions + 1), (score + dez));
-    }
-    localStorage.setItem('score', JSON.stringify(score));
-  }
+  //   if (target.value === questions[number].correct_answer) {
+  //     // se acertou aumentar os acertos e o placar mudar
+  //     //  10 + (timer * dificuldade)
+  //     // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
+  //     changeScore((assertions + 1), (score + dez));
+  //   }
+  //   localStorage.setItem('score', JSON.stringify(score));
+  // }
 
   shuffledAnswer = () => {
     const { questions, getTimer } = this.props;
@@ -114,7 +114,7 @@ class GameBody extends Component {
           data-testid={ testid }
           onClick={ this.isQuestionAnswered }
           changeScore={ this.changeScore }
-          disabled={ getTimer == 0 }
+          disabled={ getTimer === 0 }
           className={ nameClass }
           style={ this.changeStyle(nameClass) }
         >
@@ -155,7 +155,7 @@ class GameBody extends Component {
           </div>
         )}
         {
-          isAnswered || (getTimer == 0) === true ? (
+          isAnswered || (getTimer === 0) === true ? (
             <div>
               <button
                 type="button"
