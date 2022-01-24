@@ -78,6 +78,7 @@ class GameBody extends Component {
     console.log(questions[3]);
 
     let testid;
+    let nameClass;
     let answers = [];
     console.log(questions.length);
     if (questions.length > 0) {
@@ -86,21 +87,23 @@ class GameBody extends Component {
         ...questions[number].incorrect_answers, // spread porque pode haver ate 3 erradas
       ];
     }
+
     // // cria um array com posições aleatórias
     // // https://flaviocopes.com/how-to-shuffle-array-javascript/
     // // https://www.delftstack.com/pt/howto/javascript/shuffle-array-javascript/
 
     const randomConstant = 0.5;
     const shuffledAnswers = answers.sort(() => randomConstant - Math.random());
-
     // baseado nas main branches dos grupos 1 & 15
     return shuffledAnswers.map((question, index) => {
       if (question === questions[number].correct_answer) {
         console.log(question);
         // alteração dinamica do testId que terá nos botões
         testid = 'correct-answer';
+        nameClass = 'correct';
       } else {
         testid = `wrong-answer-${index}`;
+        nameClass = 'wrong';
         console.log(index); // posições das respostas errradas
       }
       return (
@@ -112,12 +115,21 @@ class GameBody extends Component {
           onClick={ this.isQuestionAnswered }
           changeScore={ this.changeScore }
           disabled={ isTimerFinish }
+          className={ nameClass }
+          style={ this.changeStyle(nameClass) }
         >
           {question}
         </button>
       );
     });
   };
+
+  changeStyle = (nameClass) => {
+    if (nameClass === 'correct') {
+      return { border: '3px solid rgb(6, 240, 15)' };
+    }
+    return { border: '3px solid rgb(255, 0, 0)' };
+  }
 
   render() {
     const { questions, isTimerFinish } = this.props;
