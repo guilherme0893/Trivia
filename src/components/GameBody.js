@@ -114,7 +114,7 @@ class GameBody extends Component {
           data-testid={ testid }
           onClick={ this.isQuestionAnswered }
           changeScore={ this.changeScore }
-          disabled={ getTimer < 30 }
+          disabled={ getTimer == 0 }
           className={ nameClass }
           style={ this.changeStyle(nameClass) }
         >
@@ -155,7 +155,7 @@ class GameBody extends Component {
           </div>
         )}
         {
-          isAnswered || (getTimer < 30) === true ? (
+          isAnswered || (getTimer == 0) === true ? (
             <div>
               <button
                 type="button"

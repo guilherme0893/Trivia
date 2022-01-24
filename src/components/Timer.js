@@ -25,7 +25,9 @@ class Timer extends Component {
         this.setState((prevState) => ({
           timer: prevState.timer - 1,
         }));
-        setTimer(timer); // se acabar o tempo ele dispara essa função
+        setTimer(timer);
+      } else {
+        setTimer(0);
       }
     }, SET_INTERVAL);
   }

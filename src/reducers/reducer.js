@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   },
   token: '',
   questions: [],
-  timer: '',
+  timer: 1,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
