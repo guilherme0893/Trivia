@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import BackToLoginButton from '../components/BackToLoginBtn';
 import GoToRanking from '../components/GoToRankingBn';
+import Header from '../components/Header';
 
 class Feedback extends Component {
   render() {
     return (
       <div>
+        <Header />
         <h1 data-testid="ranking-title">
           Ranking
         </h1>
