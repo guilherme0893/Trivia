@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { timerFinish } from '../actions';
+import { setTheTimer } from '../actions';
 
 class Timer extends Component {
   constructor() {
@@ -17,7 +17,7 @@ class Timer extends Component {
 
   startTimer = () => {
     const SET_INTERVAL = 1000;
-    const { isFinalTime } = this.props;
+    const { setTimer } = this.props;
 
     setInterval(() => {
       const { timer } = this.state;
@@ -25,8 +25,7 @@ class Timer extends Component {
         this.setState((prevState) => ({
           timer: prevState.timer - 1,
         }));
-      } else {
-        isFinalTime(); // se acabar o tempo ele dispara essa função
+        setTimer(timer); // se acabar o tempo ele dispara essa função
       }
     }, SET_INTERVAL);
   }
@@ -42,11 +41,11 @@ class Timer extends Component {
 }
 
 Timer.propTypes = {
-  isFinalTime: PropTypes.bool.isRequired,
+  setTimer: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  isFinalTime: () => dispatch(timerFinish()), // dispara a action para tornar o timerFinish true.
+  setTimer: (tempo) => dispatch(setTheTimer(tempo)), // dispara a action para tornar o timerFinish true.
 });
 
 export default connect(null, mapDispatchToProps)(Timer);

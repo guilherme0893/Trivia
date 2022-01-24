@@ -44,31 +44,31 @@ class GameBody extends Component {
     }
   }
 
-  // changeScore = ({ target }) => {
-  //   // peso de cada dificuldade para o score mudar
-  //   const values = {
-  //     easy: 1,
-  //     medium: 2,
-  //     hard: 3,
-  //   };
-  //   const dez = 10;
-  //   const { number } = this.state;
-  //   const { score, assertions, changeScore } = this.props;
-  //   const { questions } = this.props;
-  //   // pega a dificuldade de cada pergunta
-  //   const { difficulty } = questions[number];
+  changeScore = ({ target }) => {
+    // peso de cada dificuldade para o score mudar
+    const values = {
+      easy: 1,
+      medium: 2,
+      hard: 3,
+    };
+    const dez = 10;
+    const { number } = this.state;
+    const { score, assertions, changeScore } = this.props;
+    const { questions } = this.props;
+    // pega a dificuldade de cada pergunta
+    const { difficulty } = questions[number];
 
-  //   if (target.value === questions[number].correct_answer) {
-  //     // se acertou aumentar os acertos e o placar mudar
-  //     //  10 + (timer * dificuldade)
-  //     // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
-  //     changeScore((assertions + 1), (score + dez));
-  //   }
-  //   localStorage.setItem('score', JSON.stringify(score));
-  // }
+    if (target.value === questions[number].correct_answer) {
+      // se acertou aumentar os acertos e o placar mudar
+      //  10 + (timer * dificuldade)
+      // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
+      changeScore((assertions + 1), (score + dez));
+    }
+    localStorage.setItem('score', JSON.stringify(score));
+  }
 
   shuffledAnswer = () => {
-    const { questions, isTimerFinish } = this.props;
+    const { questions, getTimer } = this.props;
     // devido aos problemas de percorrer o array, com o number nao quebra a aplicação
     const { number } = this.state;
     console.log(questions);
@@ -114,7 +114,7 @@ class GameBody extends Component {
           data-testid={ testid }
           onClick={ this.isQuestionAnswered }
           changeScore={ this.changeScore }
-          disabled={ isTimerFinish }
+          disabled={ getTimer < 30 }
           className={ nameClass }
           style={ this.changeStyle(nameClass) }
         >
@@ -132,7 +132,7 @@ class GameBody extends Component {
   }
 
   render() {
-    const { questions, isTimerFinish } = this.props;
+    const { questions, getTimer } = this.props;
     const { number, isAnswered, gameFinished } = this.state;
     return (
       <div>
@@ -155,7 +155,7 @@ class GameBody extends Component {
           </div>
         )}
         {
-          isAnswered || isTimerFinish === true ? (
+          isAnswered || (getTimer < 30) === true ? (
             <div>
               <button
                 type="button"
@@ -183,7 +183,7 @@ const mapStateToProps = (state) => ({
   // token: state.token,
   score: state.player.score,
   assertions: state.player.assertions,
-  isTimerFinish: state.timerFinish,
+  getTimer: state.timer,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -202,7 +202,7 @@ GameBody.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  isTimerFinish: PropTypes.func.isRequired,
+  getTimer: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameBody);
