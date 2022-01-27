@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import BackToLoginButton from '../components/BackToLoginBtn';
 import GoToRanking from '../components/GoToRankingBn';
+import Header from '../components/Header';
 
 class Feedback extends Component {
   render() {
     return (
       <div>
-        <h1 data-testid="ranking-title">
-          Ranking
+        <Header />
+        <h1 data-testid="feedback-text">
+          Feedback
         </h1>
         <Link to="/">
           <BackToLoginButton />
