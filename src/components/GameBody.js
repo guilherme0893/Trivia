@@ -1,208 +1,243 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { getScoreAction } from '../actions/index';
+import Header from './Header';
 import Timer from './Timer';
+import '../App.css';
 
-class GameBody extends Component {
+class GameScreen extends React.Component {
   constructor() {
     super();
-
     this.state = {
       isAnswered: false,
+      isActive: false,
       number: 0,
+      options: [],
+      timeBreaker: false,
+      resetTimer: false,
+      difficultyLevel: '',
+      questionOnScreen: false,
       gameFinished: false,
     };
   }
 
-  isQuestionAnswered = (event) => {
-    // const { isAnswered } = this.state;
-    if (event.target) {
-      this.setState({
-        isAnswered: true,
-      });
-    }
+  componentDidUpdate(prevProps) {
+    const { questions } = this.props;
+    if (prevProps.questions !== questions) this.shuffledAnswer();
   }
 
   goToNextQuestion = () => {
-    const lastQuestion = 4;
-    // const { history } = this.props;
-    const { number } = this.state;
-
-    if (number === lastQuestion) {
-      this.setState({
-        gameFinished: true,
-      });
-      // history.push('/feedback');
-    } else {
-      this.setState({
-        isAnswered: false,
-        number: number + 1,
-        gameFinished: false,
-      }, () => this.shuffledAnswer());
-    }
-  }
-
-  // changeScore = ({ target }) => {
-  //   // peso de cada dificuldade para o score mudar
-  //   const values = {
-  //     easy: 1,
-  //     medium: 2,
-  //     hard: 3,
-  //   };
-  //   const dez = 10;
-  //   const { number } = this.state;
-  //   const { score, assertions, changeScore } = this.props;
-  //   const { questions } = this.props;
-  //   // pega a dificuldade de cada pergunta
-  //   const { difficulty } = questions[number];
-
-  //   if (target.value === questions[number].correct_answer) {
-  //     // se acertou aumentar os acertos e o placar mudar
-  //     //  10 + (timer * dificuldade)
-  //     // changeScore((assertions + 1), (score + dez + (counter * values[difficulty])));
-  //     changeScore((assertions + 1), (score + dez));
-  //   }
-  //   localStorage.setItem('score', JSON.stringify(score));
-  // }
-
-  shuffledAnswer = () => {
-    const { questions, isTimerFinish } = this.props;
-    // devido aos problemas de percorrer o array, com o number nao quebra a aplicação
-    const { number } = this.state;
-    console.log(questions);
-    console.log(typeof questions);
-    console.log(questions[0]);
-    console.log(questions[number]); // funciona!
-    console.log(questions[3]);
-
-    let testid;
-    let nameClass;
-    let answers = [];
-    console.log(questions.length);
-    if (questions.length > 0) {
-      answers = [
-        questions[number].correct_answer,
-        ...questions[number].incorrect_answers, // spread porque pode haver ate 3 erradas
-      ];
-    }
-
-    // // cria um array com posições aleatórias
-    // // https://flaviocopes.com/how-to-shuffle-array-javascript/
-    // // https://www.delftstack.com/pt/howto/javascript/shuffle-array-javascript/
-
-    const randomConstant = 0.5;
-    const shuffledAnswers = answers.sort(() => randomConstant - Math.random());
-    // baseado nas main branches dos grupos 1 & 15
-    return shuffledAnswers.map((question, index) => {
-      if (question === questions[number].correct_answer) {
-        console.log(question);
-        // alteração dinamica do testId que terá nos botões
-        testid = 'correct-answer';
-        nameClass = 'correct';
-      } else {
-        testid = `wrong-answer-${index}`;
-        nameClass = 'wrong';
-        console.log(index); // posições das respostas errradas
-      }
-      return (
-        // estrutura geral do botao renderizado
-        <button
-          key={ index }
-          type="button"
-          data-testid={ testid }
-          onClick={ this.isQuestionAnswered }
-          changeScore={ this.changeScore }
-          disabled={ isTimerFinish }
-          className={ nameClass }
-          style={ this.changeStyle(nameClass) }
-        >
-          {question}
-        </button>
-      );
+    this.setState((prevState) => ({
+      number: prevState.number + 1,
+      isActive: false,
+      timeBreaker: false,
+      resetTimer: true,
+      isElementRenderized: false,
+    }), () => {
+      this.shuffledAnswer();
     });
   };
 
-  changeStyle = (nameClass) => {
-    if (nameClass === 'correct') {
-      return { border: '3px solid rgb(6, 240, 15)' };
+  // isGameFinished = () => {
+  //   const lastQuestion = 4;
+  //   const { number } = this.state;
+  //   const { history } = this.props;
+  //   if (number === lastQuestion) {
+  //     history.push('/feedback');
+  //   }
+  // }
+
+  isTimeFinished = () => {
+    const correctAnswer = document.querySelector('.correct-answer');
+    const wrongAnswers = document.querySelectorAll('.wrong-answer');
+    this.setState({ isActive: true, isAnswered: true });
+    this.toggleNextButton();
+    wrongAnswers.forEach((answer) => {
+      answer.style.border = '3px solid rgb(255, 0, 0)';
+    });
+    correctAnswer.style.border = '3px solid rgb(6, 240, 15)';
+    this.setState({ timeBreaker: true, isActive: true, isAnswered: true });
+  };
+
+  changeStyle = (event) => {
+    const correctAnswer = document.querySelector('.correct-answer');
+    const wrongAnswers = document.querySelectorAll('.wrong-answer');
+    this.setState({ isActive: true, isAnswered: true });
+    this.toggleNextButton();
+    wrongAnswers.forEach((answer) => {
+      answer.style.border = '3px solid rgb(255, 0, 0)';
+    });
+    correctAnswer.style.border = '3px solid rgb(6, 240, 15)';
+    if (event.target === correctAnswer) {
+      this.setState({ timeBreaker: true, questionOnScreen: true,
+        isActive: true, isAnswered: true });
     }
-    return { border: '3px solid rgb(255, 0, 0)' };
-  }
+  };
+
+  getScore = (timer) => {
+    const { difficultyLevel } = this.state;
+    const hard = 3;
+    const medium = 2;
+    const easy = 1;
+    const dez = 10;
+    const { score, changeScore } = this.props;
+    let difficultyQuestion;
+    switch (difficultyLevel) {
+    case 'hard':
+      difficultyQuestion = hard;
+      break;
+    case 'medium':
+      difficultyQuestion = medium;
+      break;
+    case 'easy':
+      difficultyQuestion = easy;
+      break;
+    default:
+      break;
+    }
+    const newScore = dez + (timer * difficultyQuestion);
+    const finalScore = newScore + score;
+    changeScore(Number(finalScore));
+    this.setState({ questionOnScreen: false });
+  };
+
+  toggleNextButton = () => {
+    const { isActive } = this.state;
+    if (isActive === false) {
+      this.setState({
+        isActive: true,
+      });
+    }
+  };
+
+  shuffledAnswer = () => {
+    const { questions } = this.props;
+    const { number: questionsIndex } = this.state;
+    const number = 0.5;
+    let answersList = [];
+    if (questions.length > 0) {
+      const correctQuestion = questions[questionsIndex].correct_answer
+        && questions[questionsIndex].difficulty;
+      answersList = [
+        questions[questionsIndex].correct_answer,
+        ...questions[questionsIndex].incorrect_answers,
+      ];
+      this.setState(({
+        options: answersList.sort(() => number - Math.random()),
+        resetTimer: false,
+        isElementRenderized: true,
+        difficultyLevel: correctQuestion,
+      }));
+    }
+  };
 
   render() {
-    const { questions, isTimerFinish } = this.props;
-    const { number, isAnswered, gameFinished } = this.state;
+    const { questions } = this.props;
+    const { isActive, number, options,
+      timeBreaker, resetTimer, isElementRenderized,
+      questionOnScreen, gameFinished, isAnswered } = this.state;
     return (
       <div>
-        { <Timer />}
-        {questions.length && (
+        <Header />
+        <Timer
+          changeStyle={ this.changeStyle }
+          toggleNextButton={ this.toggleNextButton }
+          getScore={ this.getScore }
+          isTimeFinished={ this.isTimeFinished }
+          timeBreaker={ timeBreaker }
+          resetTimer={ resetTimer }
+          isElementRenderized={ isElementRenderized }
+          questionOnScreen={ questionOnScreen }
+        />
+        { questions.length && (
           <div>
             <div>
-              <span>Category</span>
+              <h4>Category</h4>
               <span data-testid="question-category">
-                {questions[number].category}
+                { questions[number].category }
               </span>
             </div>
             <div>
-              <span>Question</span>
-              <span data-testid="question-text">{questions[number].question}</span>
+              <h2>Question</h2>
+              <span data-testid="question-text">
+                { questions[number].question }
+              </span>
             </div>
             <div data-testid="answer-options">
-              {this.shuffledAnswer()}
+              { isElementRenderized && options.map((question, index) => {
+                let testid;
+                let change;
+                if (question === questions[number].correct_answer) {
+                  change = true;
+                  testid = 'correct-answer';
+                } else {
+                  change = false;
+                  testid = `wrong-answer-${index}`;
+                }
+                return (
+                  <button
+                    key={ index }
+                    className={ change === true ? 'correct-answer' : 'wrong-answer' }
+                    disabled={ isActive }
+                    type="button"
+                    data-testid={ testid }
+                    onClick={ this.changeStyle }
+                  >
+                    { question }
+                  </button>);
+              }) }
             </div>
           </div>
-        )}
-        {
-          isAnswered || isTimerFinish === true ? (
-            <div>
-              <button
-                type="button"
-                onClick={ this.goToNextQuestion }
-                data-testid="btn-next"
-              >
-                Next
-              </button>
-            </div>
-          ) : null
-        }
-        {
-          gameFinished === true ? (
-            <Redirect to="/feedback" />
-          ) : null
-        }
+        ) }
+        { isAnswered === true ? (
+          <div>
+            <button
+              // className={ isActive ? '' : 'hidden' }
+              type="button"
+              data-testid="btn-next"
+              onClick={ () => (
+                number === questions.length - 1
+                  ? <Redirect push to="/feedback" />
+                  : this.goToNextQuestion()
+              ) }
+            >
+              Next
+            </button>
+          </div>
+        ) : null }
+        {/* { gameFinished === true ? (
+          <Redirect push to="/feedback" />
+        ) : null } */}
       </div>
     );
   }
 }
 
-// enviar as questões e outros dados
 const mapStateToProps = (state) => ({
-  questions: state.questions,
-  // token: state.token,
+  timer: state.timer,
   score: state.player.score,
-  assertions: state.player.assertions,
-  isTimerFinish: state.timerFinish,
+  questions: state.questions,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  changeScore: (assertions, score) => dispatch(getScoreAction(assertions, score)),
+  changeScore: (score) => dispatch(getScoreAction(score)),
 });
 
-GameBody.propTypes = {
+GameScreen.propTypes = {
   questions: PropTypes.arrayOf(
     PropTypes.shape({
       category: PropTypes.string,
       correct_answer: PropTypes.string,
       incorrect_answers: PropTypes.arrayOf(PropTypes.string),
       question: PropTypes.string,
+      difficulty: PropTypes.string,
     }),
   ).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  isTimerFinish: PropTypes.func.isRequired,
+  changeScore: PropTypes.func.isRequired,
+  score: PropTypes.number.isRequired,
+  history: PropTypes.shape.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(GameBody);
+export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);

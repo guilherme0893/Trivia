@@ -8,9 +8,7 @@ class Ranking extends Component {
     return (
       <div>
         <Header />
-        <h1
-          data-testid="ranking-title"
-        >
+        <h1 data-testid="ranking-title">
           Tela de Ranking
         </h1>
         <Link to="/">

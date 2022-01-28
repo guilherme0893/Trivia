@@ -9,8 +9,8 @@ class Feedback extends Component {
     return (
       <div>
         <Header />
-        <h1 data-testid="ranking-title">
-          Ranking
+        <h1 data-testid="feedback-text">
+          Feedback
         </h1>
         <Link to="/">
           <BackToLoginButton />
