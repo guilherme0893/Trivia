@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getScoreAction } from '../actions/index';
 import Header from './Header';
@@ -19,7 +18,6 @@ class GameScreen extends React.Component {
       resetTimer: false,
       difficultyLevel: '',
       questionOnScreen: false,
-      gameFinished: false,
     };
   }
 
@@ -40,14 +38,9 @@ class GameScreen extends React.Component {
     });
   };
 
-  // isGameFinished = () => {
-  //   const lastQuestion = 4;
-  //   const { number } = this.state;
-  //   const { history } = this.props;
-  //   if (number === lastQuestion) {
-  //     history.push('/feedback');
-  //   }
-  // }
+  isGameFinished = () => {
+    window.location.href = 'http://localhost:3000/feedback'; // https://stackoverflow.com/questions/50644976/react-button-onclick-redirect-page
+  }
 
   isTimeFinished = () => {
     const correctAnswer = document.querySelector('.correct-answer');
@@ -71,8 +64,11 @@ class GameScreen extends React.Component {
     });
     correctAnswer.style.border = '3px solid rgb(6, 240, 15)';
     if (event.target === correctAnswer) {
-      this.setState({ timeBreaker: true, questionOnScreen: true,
-        isActive: true, isAnswered: true });
+      this.setState({
+        timeBreaker: true,
+        questionOnScreen: true,
+        isActive: true,
+        isAnswered: true });
     }
   };
 
@@ -137,7 +133,7 @@ class GameScreen extends React.Component {
     const { questions } = this.props;
     const { isActive, number, options,
       timeBreaker, resetTimer, isElementRenderized,
-      questionOnScreen, gameFinished, isAnswered } = this.state;
+      questionOnScreen, isAnswered } = this.state;
     return (
       <div>
         <Header />
@@ -151,7 +147,7 @@ class GameScreen extends React.Component {
           isElementRenderized={ isElementRenderized }
           questionOnScreen={ questionOnScreen }
         />
-        { questions.length && (
+        {questions.length && (
           <div>
             <div>
               <h4>Category</h4>
@@ -199,7 +195,7 @@ class GameScreen extends React.Component {
               data-testid="btn-next"
               onClick={ () => (
                 number === questions.length - 1
-                  ? <Redirect push to="/feedback" />
+                  ? this.isGameFinished()
                   : this.goToNextQuestion()
               ) }
             >
@@ -207,9 +203,6 @@ class GameScreen extends React.Component {
             </button>
           </div>
         ) : null }
-        {/* { gameFinished === true ? (
-          <Redirect push to="/feedback" />
-        ) : null } */}
       </div>
     );
   }
@@ -237,7 +230,6 @@ GameScreen.propTypes = {
   ).isRequired,
   changeScore: PropTypes.func.isRequired,
   score: PropTypes.number.isRequired,
-  history: PropTypes.shape.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);
