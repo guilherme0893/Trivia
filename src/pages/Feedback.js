@@ -13,7 +13,7 @@ class Feedback extends Component {
       <div>
         <Header />
         <h1 data-testid="feedback-text">
-          Feedback
+          Feedbacks
         </h1>
         <p data-testid="feedback-total-score">
           { score }
