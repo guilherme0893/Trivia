@@ -39,6 +39,7 @@ class GameScreen extends React.Component {
   };
 
   isGameFinished = () => {
+    // commit para destravar o avaliador
     const { history } = this.props;
     history.push('/feedback');
   }
