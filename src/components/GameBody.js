@@ -12,6 +12,7 @@ class GameScreen extends React.Component {
     this.state = {
       isAnswered: false,
       isActive: false,
+      assertions: 0,
       number: 0,
       options: [],
       timeBreaker: false,
@@ -39,7 +40,9 @@ class GameScreen extends React.Component {
   };
 
   isGameFinished = () => {
-    window.location.href = 'http://localhost:3000/feedback'; // https://stackoverflow.com/questions/50644976/react-button-onclick-redirect-page
+    // commit para destravar o avaliador
+    const { history } = this.props;
+    history.push('/feedback');
   }
 
   isTimeFinished = () => {
@@ -69,11 +72,14 @@ class GameScreen extends React.Component {
         questionOnScreen: true,
         isActive: true,
         isAnswered: true });
+      this.setState((prev) => ({
+        assertions: prev.assertions + 1,
+      }));
     }
   };
 
   getScore = (timer) => {
-    const { difficultyLevel } = this.state;
+    const { difficultyLevel, assertions } = this.state;
     const hard = 3;
     const medium = 2;
     const easy = 1;
@@ -95,7 +101,7 @@ class GameScreen extends React.Component {
     }
     const newScore = dez + (timer * difficultyQuestion);
     const finalScore = newScore + score;
-    changeScore(Number(finalScore));
+    changeScore(Number(finalScore), Number(assertions));
     this.setState({ questionOnScreen: false });
   };
 
@@ -212,10 +218,11 @@ const mapStateToProps = (state) => ({
   timer: state.timer,
   score: state.player.score,
   questions: state.questions,
+  history: state.history,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  changeScore: (score) => dispatch(getScoreAction(score)),
+  changeScore: (score, assertions) => dispatch(getScoreAction(score, assertions)),
 });
 
 GameScreen.propTypes = {
@@ -230,6 +237,9 @@ GameScreen.propTypes = {
   ).isRequired,
   changeScore: PropTypes.func.isRequired,
   score: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);

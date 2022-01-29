@@ -5,6 +5,7 @@ export const GET_INFOS = 'GET_INFOS';
 export const GET_QUESTIONS = 'GET_QUESTIONS';
 export const GET_SCORE = 'GET_SCORE';
 export const SETTIMER = 'SETTIMER';
+export const GET_HISTORY = 'GET_HISTORY';
 
 export const userInfoAction = (player) => ({
   type: GET_INFOS,
@@ -25,6 +26,11 @@ export const getScoreAction = (score, assertions) => ({
   type: GET_SCORE,
   score,
   assertions,
+});
+
+export const theHistory = (history) => ({
+  type: GET_HISTORY,
+  history,
 });
 
 export const setTheTimer = (timer) => ({

@@ -4,6 +4,7 @@ import {
   GET_QUESTIONS,
   SETTIMER,
   GET_SCORE,
+  GET_HISTORY,
 } from '../actions';
 
 const INITIAL_STATE = {
@@ -51,6 +52,11 @@ const reducer = (state = INITIAL_STATE, action) => {
         score: action.score,
         assertions: action.assertions,
       },
+    };
+  case GET_HISTORY:
+    return {
+      ...state,
+      history: action.history,
     };
   default:
     return state;
