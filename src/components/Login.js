@@ -131,6 +131,7 @@ Login.propTypes = {
   }).isRequired,
   fetchToken: PropTypes.func.isRequired,
   getUserInfos: PropTypes.func.isRequired,
+  myHystory: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Login);

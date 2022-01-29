@@ -233,6 +233,9 @@ GameScreen.propTypes = {
   ).isRequired,
   changeScore: PropTypes.func.isRequired,
   score: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);
