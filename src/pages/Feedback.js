@@ -7,6 +7,18 @@ import GoToRanking from '../components/GoToRankingBn';
 import Header from '../components/Header';
 
 class Feedback extends Component {
+
+  verifyTextCorrect = () => {
+    const { assertions } = this.props;
+    let msg = ''
+    if (assertions >= 3) {
+      msg = "Well Done!"
+    } else {
+      msg = "Could be better..."
+    }
+    return <p data-testid="feedback-text">{ msg }</p>
+  }
+
   render() {
     const { score, assertions } = this.props;
     return (
@@ -20,6 +32,8 @@ class Feedback extends Component {
         </p>
         <p data-testid="feedback-total-question">
           { assertions }
+          { ' ' }
+          { this.verifyTextCorrect() }
         </p>
         <Link to="/">
           <BackToLoginButton />

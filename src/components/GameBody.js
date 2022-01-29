@@ -12,6 +12,7 @@ class GameScreen extends React.Component {
     this.state = {
       isAnswered: false,
       isActive: false,
+      assertions: 0,
       number: 0,
       options: [],
       timeBreaker: false,
@@ -71,11 +72,14 @@ class GameScreen extends React.Component {
         questionOnScreen: true,
         isActive: true,
         isAnswered: true });
+        this.setState((prev) => ({
+          assertions: prev.assertions + 1,
+        }));
     }
   };
 
   getScore = (timer) => {
-    const { difficultyLevel } = this.state;
+    const { difficultyLevel, assertions } = this.state;
     const hard = 3;
     const medium = 2;
     const easy = 1;
@@ -97,7 +101,7 @@ class GameScreen extends React.Component {
     }
     const newScore = dez + (timer * difficultyQuestion);
     const finalScore = newScore + score;
-    changeScore(Number(finalScore));
+    changeScore(Number(finalScore), Number(assertions));
     this.setState({ questionOnScreen: false });
   };
 
@@ -218,7 +222,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  changeScore: (score) => dispatch(getScoreAction(score)),
+  changeScore: (score, assertions) => dispatch(getScoreAction(score, assertions)),
 });
 
 GameScreen.propTypes = {
