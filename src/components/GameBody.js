@@ -39,7 +39,8 @@ class GameScreen extends React.Component {
   };
 
   isGameFinished = () => {
-    window.location.href = 'http://localhost:3000/feedback'; // https://stackoverflow.com/questions/50644976/react-button-onclick-redirect-page
+    const { history } = this.props;
+    history.push('/feedback');
   }
 
   isTimeFinished = () => {
@@ -212,6 +213,7 @@ const mapStateToProps = (state) => ({
   timer: state.timer,
   score: state.player.score,
   questions: state.questions,
+  history: state.history,
 });
 
 const mapDispatchToProps = (dispatch) => ({

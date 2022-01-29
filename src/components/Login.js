@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { userInfoAction, requestTokenThunk } from '../actions';
+import { userInfoAction, requestTokenThunk, theHistory } from '../actions';
 
 class Login extends React.Component {
   constructor() {
@@ -48,9 +48,10 @@ class Login extends React.Component {
 
   handleClick = ({ target: { value } }) => {
     const { player } = this.state;
-    const { fetchToken, history, getUserInfos } = this.props;
+    const { fetchToken, history, getUserInfos, myHystory } = this.props;
     fetchToken();
     getUserInfos(player);
+    myHystory(history);
     if (value === 'play') {
       history.push('/main');
     } else {
@@ -121,6 +122,7 @@ class Login extends React.Component {
 const mapDispatchToProps = (dispatch) => ({
   getUserInfos: (player) => dispatch(userInfoAction(player)),
   fetchToken: () => dispatch(requestTokenThunk()),
+  myHystory: (history) => dispatch(theHistory(history)),
 });
 
 Login.propTypes = {
