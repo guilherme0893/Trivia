@@ -72,9 +72,9 @@ class GameScreen extends React.Component {
         questionOnScreen: true,
         isActive: true,
         isAnswered: true });
-        this.setState((prev) => ({
-          assertions: prev.assertions + 1,
-        }));
+      this.setState((prev) => ({
+        assertions: prev.assertions + 1,
+      }));
     }
   };
 
