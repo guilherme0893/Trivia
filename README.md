@@ -13,3 +13,9 @@ Nesse projeto, você será capaz de:
   - Conectar Redux aos componentes React
 
   - Criar actions assíncronas na sua aplicação React que faz uso de Redux.
+
+# Deploy
+
+https://app.netlify.com/sites/astounding-biscuit-b6954a/overview
+
+-- This project and README are going to receive updates soon.
