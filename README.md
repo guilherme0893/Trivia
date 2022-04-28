@@ -12,7 +12,7 @@ In this project a Trivia - questions & answers - application is presented. Here,
 
 # Deploy
 
-https://app.netlify.com/sites/astounding-biscuit-b6954a/overview
+https://astounding-biscuit-b6954a.netlify.app/
 
 # Future updates
 
