@@ -10,6 +10,16 @@ In this project a Trivia - questions & answers - application is presented. Here,
 
   - Create async actions in the application using Redux
 
+# How to use it 
+   
+1) First of all clone the repository via <code> git clone </code>  and enter into the folder 
+
+2) Then install the dependencies via <code> npm install </code>
+
+3) To run the application simply run <code> npm start </code>
+
+4) Have fun
+
 # Deploy
 
 https://astounding-biscuit-b6954a.netlify.app/
